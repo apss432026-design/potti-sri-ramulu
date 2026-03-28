@@ -1,5 +1,5 @@
 // ===== API CONFIG =====
-const API = 'http://localhost:5000/api';
+const API = 'https://potti-sri-ramulu-backend.vercel.app/api';
 let db = { potti: {}, trustCards: [], activities: [], gallery: [], contactInfo: {}, members: [], contacts: [] };
 let isAdmin = false;
 let editCtx = null;

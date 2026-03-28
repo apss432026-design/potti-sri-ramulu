@@ -95,7 +95,7 @@
   </footer>
 
   <script>
-    const API = 'http://localhost:5000/api';
+    const API = 'https://potti-sri-ramulu-backend.vercel.app/api';
     function setLang(l) { document.body.classList.toggle('english', l === 'en'); document.getElementById('btn-en').classList.toggle('active', l === 'en'); document.getElementById('btn-te').classList.toggle('active', l !== 'en'); }
     function toggleNav() { document.getElementById('main-nav').classList.toggle('open'); }
     function esc(s) { return s == null ? '' : String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
