@@ -4,16 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>పొట్టి శ్రీరాములు ట్రస్ట్ | Potti Sriramulu Trust</title>
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+    <title>APSS | Potti SriRamulu Trust</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Tiro+Telugu&family=Cinzel:wght@400;600;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Tiro+Telugu&family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
             --saffron: #3E2522;
             --deep-saffron: #3E2522;
-            --gold: #C8960A;
-            --gold-light: #b59543;
+            --gold: #eaa906;
+            --gold-light: #eaa906;
             --forest: #3E2522;
             --forest-light: #3E2522;
             --cream: #FFF9F0;
@@ -39,7 +40,7 @@
         }
 
         body {
-            font-family: 'Cormorant Garamond', serif;
+            font-family: 'Poppins', sans-serif;
             background: var(--cream);
             color: var(--text);
             overflow-x: hidden;
@@ -89,7 +90,7 @@
             border-radius: 20px;
             transition: all .3s;
             margin-left: 12px;
-            font-family: 'Cinzel', serif;
+            font-family: 'Poppins', sans-serif;
             letter-spacing: 1px;
         }
 
@@ -148,7 +149,7 @@
 
         .logo-text h1 .sub {
             display: block;
-            font-family: 'Cinzel', serif;
+            font-family: 'Poppins', sans-serif;
             font-size: 10px;
             color: rgba(255, 255, 255, .65);
             letter-spacing: 2px;
@@ -234,7 +235,7 @@
             border: 1px solid var(--gold);
             color: var(--gold);
             padding: 6px 20px;
-            font-family: 'Cinzel', serif;
+            font-family: 'Poppins', sans-serif;
             font-size: 11px;
             letter-spacing: 3px;
             text-transform: uppercase;
@@ -261,7 +262,7 @@
         }
 
         .hero-dates {
-            font-family: 'Cinzel', serif;
+            font-family: 'Poppins', sans-serif;
             font-size: 13px;
             color: var(--gold);
             letter-spacing: 2px;
@@ -420,7 +421,7 @@
         }
 
         .about-content .dates {
-            font-family: 'Cinzel', serif;
+            font-family: 'Poppins', sans-serif;
             font-size: 12px;
             color: var(--saffron);
             letter-spacing: 2px;
@@ -455,7 +456,7 @@
 
         .chip {
             background: #9E6752;
-            color: var(--gold-light);
+            color: var(--white);
             padding: 5px 14px;
             border-radius: 20px;
             font-family: 'Tiro Telugu', serif;
@@ -812,6 +813,152 @@
             padding-top: 20px;
             margin-top: 20px;
             color: rgba(255, 255, 255, .4);
+        }
+
+        /* ACTIVITY POPUP */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .popup-card {
+            background: var(--white);
+            max-width: 550px;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            transform: translateY(30px);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-overlay.active .popup-card {
+            transform: translateY(0);
+        }
+
+        .popup-img {
+            width: 100%;
+            aspect-ratio: 280 / 220;
+            height: auto;
+            object-fit: cover;
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .popup-content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .popup-badge {
+            display: inline-block;
+            background: rgba(158, 103, 82, 0.1);
+            color: var(--saffron);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 50px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .popup-title {
+            font-family: 'Tiro Telugu', serif;
+            font-size: 24px;
+            color: var(--forest);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .popup-desc {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 25px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .popup-btn-view {
+            background: linear-gradient(135deg, var(--saffron) 0%, var(--deep-saffron) 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(158, 103, 82, 0.3);
+        }
+
+        .popup-btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(158, 103, 82, 0.4);
+        }
+
+        .popup-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .popup-close-btn:hover {
+            background: var(--off-white);
+            transform: rotate(90deg);
+        }
+
+        @media (max-width: 600px) {
+            .popup-card {
+                border-radius: 15px;
+            }
+            .popup-img {
+                aspect-ratio: 280 / 220;
+                height: auto;
+            }
+            .popup-content {
+                padding: 20px;
+            }
+            .popup-title {
+                font-size: 20px;
+            }
         }
 
         /* ADMIN */
@@ -1634,7 +1781,7 @@
 
     <section class="hero">
         <div class="hero-content">
-            <div class="hero-badge">Potti Sriramulu Trust — Since 1952</div>
+
             <h2><span class="te">అమరజీవి పొట్టి శ్రీరాములు</span><span class="en">Amarajivi Potti Sriramulu</span></h2>
             <p class="hero-sub te">తెలుగు ప్రజల కోసం తన ప్రాణాన్ని అర్పించిన మహాపురుషుడు</p>
             <p class="hero-sub en">The great soul who sacrificed his life for the Telugu-speaking people</p>
@@ -1803,13 +1950,13 @@
     <footer>
         <div class="footer-title te">పొట్టి శ్రీరాములు ట్రస్ట్</div>
         <div class="footer-title en">Potti Sriramulu Trust</div>
-        <div class="footer-sub">Serving Andhra Pradesh Since 1952</div>
+        <div class="footer-sub">Serving Andhra Pradesh</div>
         <p style="font-size:15px;max-width:600px;margin:0 auto 12px;color:rgba(255,255,255,.6)" class="te">అమరజీవి
             పొట్టి
             శ్రీరాములు స్మృతిలో — తెలుగు ప్రజల సేవలో నిరంతరం</p>
         <p style="font-size:15px;max-width:600px;margin:0 auto 12px;color:rgba(255,255,255,.6)" class="en">In memory of
             Amarajivi Potti Sriramulu — Forever in service of the Telugu people</p>
-        <div class="footer-copy">WinWin connecting dots</div>
+        <div class="footer-copy"><span style="color: var(--gold); font-weight: bold; letter-spacing: 1px;">Powered by WINWIN</span></div>
         <button class="admin-link-btn" onclick="openAdminLogin()" style="margin-top:20px; margin-left:0;">🔐
             Admin</button>
     </footer>
@@ -2218,6 +2365,26 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- LATEST ACTIVITY POPUP -->
+    <div id="activity-popup" class="popup-overlay">
+        <div class="popup-card">
+            <button class="popup-close-btn" onclick="closeActivityPopup()">✕</button>
+            <img id="popup-img" class="popup-img" src="" alt="Latest Activity">
+            <div class="popup-content">
+                <div class="popup-badge te">తాజా కార్యక్రమం</div>
+                <div class="popup-badge en">Latest Activity</div>
+                <h1 id="popup-title-te" class="popup-title te"></h1>
+                <h1 id="popup-title-en" class="popup-title en"></h1>
+                <p id="popup-desc-te" class="popup-desc te"></p>
+                <p id="popup-desc-en" class="popup-desc en"></p>
+                <div class="popup-actions">
+                    <a id="popup-view-more" href="#" class="popup-btn-view te">మరింత చూడండి</a>
+                    <a id="popup-view-more-en" href="#" class="popup-btn-view en">View Details</a>
+                </div>
+            </div>
         </div>
     </div>
 
