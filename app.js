@@ -4,6 +4,10 @@ let db = { potti: {}, trustCards: [], activities: [], gallery: [], contactInfo: 
 let isAdmin = false;
 let editCtx = null;
 
+// Initialize Language
+let currentLang = localStorage.getItem('pst_lang') || 'en';
+document.body.classList.toggle('english', currentLang === 'en');
+
 function getToken() { return localStorage.getItem('pst_token'); }
 function setToken(t) { localStorage.setItem('pst_token', t); }
 function clearToken() { localStorage.removeItem('pst_token'); }
@@ -132,7 +136,14 @@ function renderContactDisp() {
 }
 
 // ===== LANG =====
-function setLang(l) { document.body.classList.toggle('english', l === 'en'); document.getElementById('btn-en').classList.toggle('active', l === 'en'); document.getElementById('btn-te').classList.toggle('active', l !== 'en'); }
+function setLang(l) {
+  currentLang = l;
+  localStorage.setItem('pst_lang', l);
+  document.body.classList.toggle('english', l === 'en');
+  const be = document.getElementById('btn-en'), bt = document.getElementById('btn-te');
+  if (be) be.classList.toggle('active', l === 'en');
+  if (bt) bt.classList.toggle('active', l !== 'en');
+}
 function toggleNav() { document.getElementById('main-nav').classList.toggle('open'); }
 document.querySelectorAll('nav a').forEach(a => a.addEventListener('click', () => document.getElementById('main-nav').classList.remove('open')));
 
@@ -442,6 +453,7 @@ function closeActivityPopup() {
 // ===== INIT =====
 loadAllData().then(() => {
   renderAll();
+  setLang(currentLang);
   showLatestActivityPopup();
   setTimeout(() => {
     const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; } }); }, { threshold: .1 });

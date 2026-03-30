@@ -34,7 +34,7 @@
     .footer-title { font-family: 'Tiro Telugu', serif; font-size: 20px; color: var(--gold-light); margin-bottom: 8px; }
     .footer-sub { font-family: 'Poppins', sans-serif; font-size: 11px; letter-spacing: 2px; color: rgba(255, 255, 255, .45); margin-bottom: 20px; }
     .footer-copy { font-size: 13px; border-top: 1px solid rgba(255, 255, 255, .1); padding-top: 20px; margin-top: 20px; color: rgba(255, 255, 255, .4); }
-    .en { display: none !important; } body.english .en { display: block !important; } body.english .te { display: none !important; }
+    .en { display: none !important; } body.english .en { display: block !important; } .te, .en { transition: opacity 0.2s ease; } body.english .te { display: none !important; }
 
     /* Activity Details Styles */
     main { min-height: 70vh; padding: 60px 0; }
@@ -62,8 +62,8 @@
 
   <div class="header-wrapper">
     <div class="lang-bar">
-      <button class="lang-btn active" id="btn-te" onclick="setLang('te')">తెలుగు</button>
-      <button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button>
+      <button class="lang-btn" id="btn-te" onclick="setLang('te')">తెలుగు</button>
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')">English</button>
     </div>
     <header>
       <div class="header-inner">
@@ -97,7 +97,16 @@
 
   <script>
     const API = 'https://potti-sri-ramulu-backend.vercel.app/api';
-    function setLang(l) { document.body.classList.toggle('english', l === 'en'); document.getElementById('btn-en').classList.toggle('active', l === 'en'); document.getElementById('btn-te').classList.toggle('active', l !== 'en'); }
+    let currentLang = localStorage.getItem('pst_lang') || 'en';
+    function setLang(l) { 
+      currentLang = l;
+      localStorage.setItem('pst_lang', l);
+      document.body.classList.toggle('english', l === 'en'); 
+      const be = document.getElementById('btn-en'), bt = document.getElementById('btn-te');
+      if (be) be.classList.toggle('active', l === 'en');
+      if (bt) bt.classList.toggle('active', l !== 'en');
+    }
+    document.addEventListener('DOMContentLoaded', () => setLang(currentLang));
     function toggleNav() { document.getElementById('main-nav').classList.toggle('open'); }
     function esc(s) { return s == null ? '' : String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
