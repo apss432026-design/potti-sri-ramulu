@@ -2005,6 +2005,32 @@
         </div>
     </div>
 
+    <!-- GALLERY UPLOAD MODAL -->
+    <div class="edit-overlay" id="gallery-upload-overlay">
+        <div class="edit-modal">
+            <button class="modal-close" onclick="closeGalleryUpload()">✕</button>
+            <h3 id="gu-title">🖼️ Upload to Gallery Card</h3>
+            <div style="margin-bottom:15px;color:var(--text-muted);font-size:14px;" id="gu-subtitle"></div>
+            <input type="hidden" id="gu-card-id">
+            
+            <div style="border: 2px dashed var(--saffron); border-radius: 8px; padding: 30px; text-align: center; background: #fffdf5; cursor: pointer; transition: background 0.2s;" onclick="document.getElementById('gu-file-input').click()" id="gu-dropzone">
+                <div style="font-size: 32px; margin-bottom: 10px;">📸</div>
+                <div style="font-family:'Tiro Telugu',serif; color:var(--forest); font-size:16px;">Click to Choose Images</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top:5px;">Supports PNG, JPG, WEBP</div>
+                <input type="file" id="gu-file-input" accept="image/*" multiple style="display:none" onchange="handleGalleryUploadPreview(this)">
+            </div>
+            
+            <div id="gu-preview-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 10px; margin-top: 20px; max-height: 200px; overflow-y: auto;">
+                <!-- Previews injected here -->
+            </div>
+            
+            <div class="edit-btns" style="margin-top: 24px;">
+                <button class="submit-btn" id="gu-submit-btn" onclick="submitGalleryUpload()">📤 Start Upload</button>
+                <button class="submit-btn danger" onclick="closeGalleryUpload()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ADMIN DASHBOARD -->
     <div class="admin-dashboard" id="admin-dashboard">
         <div class="admin-topbar">
@@ -2108,8 +2134,8 @@
                         </div>
                     </div>
                     <div class="form-row single">
-                        <div><label class="form-label">Fact Chips (comma separated e.g. 🗓️ జన్మ: 1901, 📍
-                                నెల్లూరు)</label><input id="ap-chips" type="text"></div>
+                        <div><label class="form-label">Fact Chips (comma separated e.g. 🗓️ జన్మ: 1901 | Born: 1901, 📍
+                                నెల్లూరు | Nellore)</label><input id="ap-chips" type="text"></div>
                     </div>
                     <button class="submit-btn" onclick="savePotti()">💾 Save About Potti</button>
                 </div>
@@ -2120,7 +2146,7 @@
                 <div class="admin-form-card">
                     <h3>➕ Add New Committee Member</h3>
                     <div class="form-row single">
-                        <div><label class="form-label">Photo Upload</label><input type="file" accept="image"
+                        <div><label class="form-label">Photo Upload</label><input type="file" accept="image/*"
                                 onchange="handleImageUpload(this, 'tc-photo')"><input id="tc-photo" type="hidden"></div>
                     </div>
                     <div class="form-row">
@@ -2160,7 +2186,7 @@
                 <div class="admin-form-card">
                     <h3>➕ Add New Activity</h3>
                     <div class="form-row single">
-                        <div><label class="form-label">Photo Upload</label><input type="file" accept="image/"
+                        <div><label class="form-label">Photo Upload</label><input type="file" accept="image/*"
                                 onchange="handleImageUpload(this, 'ac-photo')"><input id="ac-photo" type="hidden"></div>
                     </div>
                     <div class="form-row">
@@ -2233,7 +2259,7 @@
                     </table>
                 </div>
             </div>
-
+ 
             <!-- CONTACT INFO -->
             <div class="admin-section" id="tab-contactinfo">
                 <div class="admin-form-card">

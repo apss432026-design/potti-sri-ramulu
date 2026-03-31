@@ -72,7 +72,19 @@ function renderPotti() {
   const img = document.getElementById('potti-img');
   if (p.photo) { img.src = p.photo; img.style.display = 'block'; }
   const chips = (p.chips || '').split(',').map(c => c.trim()).filter(Boolean);
-  document.getElementById('potti-chips').innerHTML = chips.map(c => `<span class="chip">${esc(c)}</span>`).join('');
+  document.getElementById('potti-chips').innerHTML = chips.map(c => {
+    let parts = c.split('|').map(p => p.trim());
+    if (parts.length > 1) {
+      return `<span class="chip"><span class="te">${esc(parts[0])}</span><span class="en">${esc(parts[1])}</span></span>`;
+    }
+    let enText = c;
+    if (c.includes('జన్మ:')) enText = c.replace('జన్మ:', 'Born:');
+    else if (c.includes('జననం:')) enText = c.replace('జననం:', 'Born:');
+    else if (c.includes('నెల్లూరు')) enText = c.replace('నెల్లూరు', 'Nellore');
+    else if (c.includes('గాంధేయవాది')) enText = c.replace('గాంధేయవాది', 'Gandhian');
+    else if (c.includes('ఆంధ్ర రాష్ట్ర నిర్మాత')) enText = c.replace('ఆంధ్ర రాష్ట్ర నిర్మాత', 'Creator of Andhra State');
+    return `<span class="chip"><span class="te">${esc(c)}</span><span class="en">${esc(enText)}</span></span>`;
+  }).join('');
 }
 
 function renderTrust() {
@@ -115,7 +127,7 @@ function renderGallery() {
     <div class="gallery-item" style="${i === 0 ? 'grid-column:span 2;aspect-ratio:8/3;' : ''}">
       ${bgLayer}
       <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to top, rgba(0,0,0,0.95),transparent 70%);z-index:1;pointer-events:none;"></div>
-      <div class="gallery-inner" style="z-index:2;position:relative;">
+      <div class="gallery-inner" style="z-index:2;position:relative;${photos.length ? 'background:transparent;' : ''}">
         ${isAdmin ? `<button class="gallery-del" onclick="delGallery('${g._id}')">🗑 Remove</button>` : ''}
         ${photos.length ? '' : '<span class="gallery-icon">🖼️</span>'}
         <span class="gallery-label te" style="${photos.length ? 'text-shadow:0 2px 4px rgba(0,0,0,0.8);color:white;' : ''}">${esc(g.lte)}</span>
@@ -291,7 +303,7 @@ function renderGalTable() {
     const photos = g.photos || [];
     let t = '—';
     if (photos.length) t = `<img src="${esc(photos[0])}" style="width:60px;height:40px;border-radius:4px;object-fit:cover"><br><small>${photos.length} imgs</small>`;
-    return `<tr><td>${i + 1}</td><td>${t}</td><td>${esc(g.lte)}</td><td>${esc(g.len)}</td><td><button class="action-btn edit" onclick="openEditGal('${g._id}')">✏️ Edit</button><button class="action-btn delete" onclick="delGallery('${g._id}')">🗑 Del</button></td></tr>`;
+    return `<tr><td>${i + 1}</td><td>${t}</td><td>${esc(g.lte)}</td><td>${esc(g.len)}</td><td><button class="action-btn" style="background:#4CAF50;color:white;margin-right:4px;" onclick="openGalleryUpload('${g._id}')">📸 Upload Photos</button><button class="action-btn edit" onclick="openEditGal('${g._id}')">✏️ Edit</button><button class="action-btn delete" onclick="delGallery('${g._id}')">🗑 Del</button></td></tr>`;
   }).join('');
 }
 function openEditGal(id) {
@@ -305,6 +317,81 @@ function openEditGal(id) {
   document.getElementById('edit-overlay').classList.add('active');
 }
 async function delGallery(id) { if (!confirm('Remove?')) return; await fetch(API + '/gallery/' + id, { method: 'DELETE', headers: authHeaders() }); db.gallery = db.gallery.filter(g => g._id !== id); renderGallery(); renderGalTable(); refreshDash(); toast('🗑 Removed.'); }
+
+// --- GALLERY DYNAMIC UPLOAD MODAL ---
+let currentGalleryUploadFiles = [];
+
+function openGalleryUpload(id) {
+  const g = db.gallery.find(x => x._id === id); if (!g) return;
+  document.getElementById('gu-card-id').value = id;
+  document.getElementById('gu-title').textContent = `🖼️ Upload to Gallery`;
+  document.getElementById('gu-subtitle').textContent = `Card: ${esc(g.len)} - ${esc(g.lte)}`;
+  document.getElementById('gu-preview-grid').innerHTML = '';
+  document.getElementById('gu-file-input').value = '';
+  currentGalleryUploadFiles = [];
+  document.getElementById('gallery-upload-overlay').classList.add('active');
+}
+
+function closeGalleryUpload() {
+  document.getElementById('gallery-upload-overlay').classList.remove('active');
+}
+document.getElementById('gallery-upload-overlay').addEventListener('click', function (e) { if (e.target === this) closeGalleryUpload(); });
+
+function handleGalleryUploadPreview(input) {
+  if (!input.files || !input.files.length) return;
+  const grid = document.getElementById('gu-preview-grid');
+  grid.innerHTML = '';
+  currentGalleryUploadFiles = Array.from(input.files);
+  
+  currentGalleryUploadFiles.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      grid.innerHTML += `<div style="aspect-ratio:1; border-radius:4px; overflow:hidden; border:1px solid var(--border)"><img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;"></div>`;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function submitGalleryUpload() {
+  if (!currentGalleryUploadFiles.length) { toast('⚠️ Please select at least one image!'); return; }
+  const id = document.getElementById('gu-card-id').value;
+  const btn = document.getElementById('gu-submit-btn');
+  const ogText = btn.textContent;
+  btn.textContent = '⏳ Uploading...'; btn.disabled = true;
+  
+  try {
+    const formData = new FormData();
+    currentGalleryUploadFiles.forEach(file => formData.append('images', file));
+    
+    // Auth headers strictly skipping Content-Type to allow fetch boundaries
+    const headers = new Headers();
+    const token = localStorage.getItem('pst_token');
+    if (token) headers.append('Authorization', `Bearer ${token}`);
+    
+    const res = await fetch(`${API}/gallery/${id}/upload`, {
+      method: 'POST',
+      headers,
+      body: formData
+    });
+    
+    if (!res.ok) throw new Error(await res.text());
+    
+    const updatedItem = await res.json();
+    const idx = db.gallery.findIndex(g => g._id === id);
+    if (idx !== -1) {
+      db.gallery[idx] = updatedItem;
+      renderGallery();
+      renderGalTable();
+    }
+    toast('✅ Upload successful!');
+    closeGalleryUpload();
+  } catch (err) {
+    console.error(err);
+    toast('❌ Upload failed.');
+  } finally {
+    btn.textContent = ogText; btn.disabled = false;
+  }
+}
 
 // ===== EDIT MODAL =====
 function closeEditModal() { document.getElementById('edit-overlay').classList.remove('active'); editCtx = null; }
